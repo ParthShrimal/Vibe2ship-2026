@@ -17,10 +17,18 @@ console.log("ENV KEYS:", Object.keys(process.env).filter(k => k.includes("GOOGLE
 app.use(cors());
 app.use(express.json());
 
-// Initialize Gemini API
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+// Initialize Gemini API lazily to prevent crashing on Vercel startup if key is missing
+let aiInstance: GoogleGenAI | null = null;
+function getAI(): GoogleGenAI {
+  if (!aiInstance) {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) {
+      throw new Error("GEMINI_API_KEY environment variable is not configured. Please add it to your environment.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey: key });
+  }
+  return aiInstance;
+}
 
 // Robust Local Fallback Analyzers to handle Quota / Rate Limits gracefully
 function fallbackAnalyzeTask(taskStr: string, time: any) {
@@ -385,7 +393,7 @@ app.post("/api/analyze-task", async (req, res) => {
       resolvedDeadline = new Date(Date.now() + Number(dayMatch[1]) * 24 * 60 * 60 * 1000).toISOString();
     }
 
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
 You are an AI productivity assistant.
@@ -458,7 +466,7 @@ app.post("/api/generate-day", async (req, res) => {
   const time = getCurrentContext(req.body);
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
 You are an expert productivity coach.
@@ -506,7 +514,7 @@ app.post("/api/ai-coach", async (req, res) => {
   const time = getCurrentContext(req.body);
 
   try {
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
 You are an AI productivity coach.
@@ -567,7 +575,7 @@ app.post("/api/rescue-mode", async (req, res) => {
     const minutes = totalMinutes % 60;
     const timeRemaining = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
 You are an expert productivity coach.
@@ -645,7 +653,7 @@ ${(history || []).map((h: any) => `${h.role === "user" ? "User" : "Guardian"}: $
 User: ${message}
 `;
 
-    const response = await ai.models.generateContent({
+    const response = await getAI().models.generateContent({
       model: "gemini-2.5-flash",
       contents: contextPrompt,
     });
@@ -684,7 +692,7 @@ async function startServer() {
   });
 }
 
-if (process.env.VERCEL !== "1") {
+if (!process.env.VERCEL) {
   startServer();
 }
 
