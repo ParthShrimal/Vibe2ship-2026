@@ -9,6 +9,15 @@ import { toast } from "sonner";
 
 export default function LoginButton() {
   const [loading, setLoading] = useState(false);
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  React.useEffect(() => {
+    try {
+      setIsInIframe(window.self !== window.top);
+    } catch (e) {
+      setIsInIframe(true);
+    }
+  }, []);
 
   async function handleLogin() {
     try {
@@ -56,26 +65,38 @@ export default function LoginButton() {
   }
 
   return (
-    <Button
-      size="lg"
-      onClick={handleLogin}
-      disabled={loading}
-      className="
-      group
-      relative
-      overflow-hidden
-      rounded-xl
-      bg-indigo-600
-      px-8
-      py-6
-      text-lg
-      transition-all
-      duration-300
-      hover:scale-105
-      hover:bg-indigo-500
-      active:scale-95
-      "
-    >
+    <div className="flex flex-col items-center gap-4 w-full max-w-sm mx-auto">
+      {isInIframe && (
+        <div className="flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200 backdrop-blur-sm text-center w-full">
+          <span className="font-semibold text-amber-400 flex items-center justify-center gap-2">
+            ⚠️ Inside AI Studio Preview
+          </span>
+          <span className="text-zinc-400 text-xs leading-relaxed">
+            Google Sign-In is blocked inside nested frames by browser security. To login, please click the <strong className="text-white">"Open in New Tab"</strong> button in the top-right corner of the window.
+          </span>
+        </div>
+      )}
+      <Button
+        size="lg"
+        onClick={handleLogin}
+        disabled={loading}
+        className="
+        group
+        relative
+        overflow-hidden
+        rounded-xl
+        bg-indigo-600
+        px-8
+        py-6
+        text-lg
+        transition-all
+        duration-300
+        hover:scale-105
+        hover:bg-indigo-500
+        active:scale-95
+        w-full
+        "
+      >
       <span
         className="
         absolute
@@ -121,5 +142,6 @@ export default function LoginButton() {
         />
       </span>
     </Button>
+    </div>
   );
 }
