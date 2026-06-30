@@ -1,9 +1,10 @@
 {
-  "projectId": "utility-link-bjlsj",
-  "appId": "1:672606399548:web:33bc56536c66a3fea02739",
-  "apiKey": "AIzaSyAxTnaGYjJ1S2HidVvTY5aaPPThgYTyKUg",
-  "authDomain": "utility-link-bjlsj.firebaseapp.com",
-  "storageBucket": "utility-link-bjlsj.firebasestorage.app",
-  "messagingSenderId": "672606399548",
+  "projectId": "deadlineguardianai-e9dc6",
+  "appId": "1:366004353896:web:ba9adb3936d67c805f74dd",
+  "apiKey": "AIzaSyD1yoz1A4WXMpfq33xFI_b28r8xrYIy-jA",
+  "authDomain": "deadlineguardianai-e9dc6.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-deadlineguardian-c5d0ce01-e670-4a54-98e2-167f3448dfca",
+  "storageBucket": "deadlineguardianai-e9dc6.firebasestorage.app",
+  "messagingSenderId": "366004353896",
   "measurementId": ""
 }
