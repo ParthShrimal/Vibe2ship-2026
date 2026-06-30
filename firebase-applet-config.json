@@ -1,10 +1,10 @@
 {
-  "projectId": "deadlineguardianai-e9dc6",
-  "appId": "1:366004353896:web:ba9adb3936d67c805f74dd",
-  "apiKey": "AIzaSyD1yoz1A4WXMpfq33xFI_b28r8xrYIy-jA",
-  "authDomain": "deadlineguardianai-e9dc6.firebaseapp.com",
+  "projectId": "deadline-guardian-ai-42176",
+  "appId": "1:1086933963243:web:d30262c43541906f3989ae",
+  "apiKey": "AIzaSyB296kpfooBE7wuIJ_RGK0RZZXMBV9O6_Y",
+  "authDomain": "deadline-guardian-ai-42176.firebaseapp.com",
   "firestoreDatabaseId": "ai-studio-deadlineguardian-c5d0ce01-e670-4a54-98e2-167f3448dfca",
-  "storageBucket": "deadlineguardianai-e9dc6.firebasestorage.app",
-  "messagingSenderId": "366004353896",
+  "storageBucket": "deadline-guardian-ai-42176.firebasestorage.app",
+  "messagingSenderId": "1086933963243",
   "measurementId": ""
 }
