@@ -73,6 +73,22 @@ export default function HeroCard() {
       }
       if (isPopupClosed) {
         toast.error("The authorization window was closed before completion.");
+      } else if (err.code === "auth/unauthorized-domain" || err.message?.includes("unauthorized-domain")) {
+        toast.error(
+          <div className="flex flex-col gap-2 p-1 text-sm text-left">
+            <span className="font-bold text-red-500">Firebase Unauthorized Domain Error</span>
+            <span>
+              Google Auth popups are blocked by modern browsers when run inside nested iframes (like the AI Studio Live Preview).
+            </span>
+            <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+              👉 Please click the "Open in New Tab" button in the top-right corner of the AI Studio window to authorize your Calendar!
+            </span>
+            <span className="text-xs text-muted-foreground mt-1">
+              Also make sure "ais-dev-zibfddjgq6ybedntgueomy-118826210790.asia-southeast1.run.app" is listed in your Firebase Auth &rarr; Settings &rarr; Authorized Domains list.
+            </span>
+          </div>,
+          { duration: 15000 }
+        );
       } else {
         toast.error("Failed to link Google Calendar.");
       }

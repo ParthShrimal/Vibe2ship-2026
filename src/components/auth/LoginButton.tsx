@@ -32,6 +32,22 @@ export default function LoginButton() {
         toast.error("Network connection to auth servers failed. If you have an Ad-Blocker, Brave Shields, or privacy extensions enabled, please temporarily disable them or click 'Open App in New Tab' to sign in successfully.", {
           duration: 10000,
         });
+      } else if (err.code === "auth/unauthorized-domain" || err.message?.includes("unauthorized-domain")) {
+        toast.error(
+          <div className="flex flex-col gap-2 p-1 text-sm text-left">
+            <span className="font-bold text-red-500">Firebase Unauthorized Domain Error</span>
+            <span>
+              Google Sign-In popups are blocked by modern browsers when run inside nested iframes (like the AI Studio Live Preview).
+            </span>
+            <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+              👉 Please click the "Open in New Tab" button in the top-right corner of the AI Studio window and sign in from there!
+            </span>
+            <span className="text-xs text-muted-foreground mt-1">
+              Also make sure "ais-dev-zibfddjgq6ybedntgueomy-118826210790.asia-southeast1.run.app" is listed in your Firebase Auth &rarr; Settings &rarr; Authorized Domains list.
+            </span>
+          </div>,
+          { duration: 15000 }
+        );
       } else {
         toast.error("Sign-in failed: " + (err.message || "Please check your network and try again."));
       }
