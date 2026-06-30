@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "User created deadlines and task details",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the owner" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "deadline": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "completed", "missed"] },
+        "createdAt": { "type": "number" },
+        "completedAt": { "type": "number" },
+        "missedAt": { "type": "number" },
+        "missedPopupShown": { "type": "boolean" },
+        "priority": { "type": "string" },
+        "estimatedBlocks": { "type": "number" }
+      },
+      "required": ["userId", "title", "status", "createdAt"]
+    },
+    "FocusSession": {
+      "title": "FocusSession",
+      "description": "Logged Pomodoro / Focus intervals",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string" },
+        "taskTitle": { "type": "string" },
+        "mode": { "type": "string" },
+        "durationSeconds": { "type": "number" },
+        "interrupted": { "type": "boolean" },
+        "completedAt": { "type": "number" },
+        "dateString": { "type": "string" }
+      },
+      "required": ["mode", "durationSeconds", "completedAt", "dateString"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app notifications",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "read": { "type": "boolean" },
+        "type": { "type": "string" }
+      },
+      "required": ["title", "message", "createdAt", "read"]
+    },
+    "ChatHistory": {
+      "title": "ChatHistory",
+      "description": "AI chatbot message entries",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "model"] },
+        "text": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["role", "text", "timestamp"]
+    },
+    "Dashboard": {
+      "title": "Dashboard",
+      "description": "Current productivity dashboard and AI advice metrics",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "todayPlan": { "type": "object" },
+        "coach": { "type": "object" },
+        "rescue": { "type": "object" },
+        "urgentTask": { "type": "object" },
+        "activeView": { "type": "string" },
+        "lastUpdated": { "type": "number" },
+        "productivityScore": { "type": "number" },
+        "calendarSyncStatus": { "type": "string" },
+        "pendingNotificationsCount": { "type": "number" }
+      },
+      "required": ["date", "lastUpdated", "productivityScore"]
+    },
+    "Timer": {
+      "title": "Timer",
+      "description": "Active Pomodoro running state details",
+      "type": "object",
+      "properties": {
+        "remainingSeconds": { "type": "number" },
+        "status": { "type": "string" },
+        "mode": { "type": "string" },
+        "startedAt": { "type": "number" },
+        "pausedAt": { "type": "number" },
+        "focusSessions": { "type": "number" },
+        "lastUpdated": { "type": "number" }
+      },
+      "required": ["remainingSeconds", "status", "mode", "lastUpdated"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Deadlines tasks list"
+    },
+    "/users/{userId}/focusSessions/{sessionId}": {
+      "schema": "FocusSession",
+      "description": "Pomodoro sessions history"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "List of alerts and milestones"
+    },
+    "/users/{userId}/chatHistory/{chatId}": {
+      "schema": "ChatHistory",
+      "description": "Chat log with AI agent"
+    },
+    "/users/{userId}/dashboard/{dashboardId}": {
+      "schema": "Dashboard",
+      "description": "Today's personalized dashboard view"
+    },
+    "/users/{userId}/dashboardHistory/{historyId}": {
+      "schema": "Dashboard",
+      "description": "Archived previous dashboards"
+    },
+    "/users/{userId}/timer/{timerId}": {
+      "schema": "Timer",
+      "description": "Pomodoro live sync timer state"
+    }
+  }
+}

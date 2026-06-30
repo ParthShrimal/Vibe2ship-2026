@@ -1,0 +1,6 @@
+{
+  "name": "Deadline Guardian AI",
+  "description": "AI Productivity Companion featuring persistent AI dashboard caching, Pomodoro focus timer synchronization, context-aware chatbot, and Google Calendar integrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

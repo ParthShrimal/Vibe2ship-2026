@@ -1,0 +1,77 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global safety net - default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Standard authentication helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 2. Gating and schema for individual tasks
+    match /tasks/{taskId} {
+      // Allow creation of tasks belonging to the signed-in user
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 500;
+
+      // Allow listing/reading only if the tasks belong to the user
+      allow list, get: if isSignedIn()
+        && (resource == null || resource.data.userId == request.auth.uid);
+
+      // Allow updating of own tasks
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid;
+
+      // Allow deletion of own tasks
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // 3. User subcollections isolation
+    match /users/{userId} {
+      // Allow read/write for the user document itself
+      allow read, write: if isOwner(userId);
+
+      // Pomodoro focus sessions logged by the user
+      match /focusSessions/{sessionId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Notifications list
+      match /notifications/{notificationId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // AI Companion chat messages history
+      match /chatHistory/{chatId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Daily dashboard document (current)
+      match /dashboard/{dashboardId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Daily dashboard archive documents
+      match /dashboardHistory/{historyId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Live synced pomodoro timer state
+      match /timer/{timerId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+  }
+}
